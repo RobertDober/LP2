@@ -44,7 +44,6 @@ defmodule LP2.Scanner.Token do
         unquote(blk)
       end).()
         defstruct @fields
-        IO.inspect @struct_types
         unquote(__MODULE__).define_type(@struct_types)
     end
   end

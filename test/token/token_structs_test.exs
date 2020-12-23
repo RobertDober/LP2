@@ -11,23 +11,16 @@ defmodule Test.Token.TokenStructTest do
     end
   end
 
-  describe "ListItem" do
-    test "a ListItem" do
-      li = %Scanner.ListItem{line: "line", lnb: 42}
+  describe "UlListItem" do
+    test "a UlListItem" do
+      li = %Scanner.UlListItem{line: "line", lnb: 42}
       assert li.line == "line"
       assert li.lnb == 42
       assert li.indent == 0
     end
     test "more fields here" do
-      li = %Scanner.ListItem{line: "line", lnb: 42, type: :ol, list_indent: 5}
-      assert li.type == :ol
+      li = %Scanner.UlListItem{line: "line", lnb: 42, list_indent: 5}
       assert li.list_indent == 5
-    end
-    test "default value for type" do
-      li = %Scanner.ListItem{}
-      assert li.line == "" 
-      assert li.type == :ul 
-      
     end
   end
 end
