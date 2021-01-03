@@ -9,7 +9,7 @@ defmodule Test.Parser.ListTest do
       input    = [
         "* a ul list item"
       ]
-      expected = ok(ul(li("a ul list item")))
+      expected = ok(ul(li("a ul list item"))) |> IO.inspect() 
      
       assert parse(input) == expected
     end

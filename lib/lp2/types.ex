@@ -4,6 +4,9 @@ defmodule LP2.Types do
       @type attribute_t :: {binary(), binary()}
       @type attribute_ts :: list(attribute_t())
 
+      @type content_t :: binary() | quad_t()
+      @type content_ts :: list(content_t)
+
       @type maybe(t) :: t | nil
 
       @type message_t :: {non_neg_integer(), severity_t(), binary()} 
@@ -13,13 +16,18 @@ defmodule LP2.Types do
 
       @type input_t :: binary() | list(binary())
 
-      @type qaud_t :: {binary(), attribute_ts(), qaud_ts(), map()}
-      @type qaud_ts :: list(qaud_t)
+      @type quad_t :: {atom(), attribute_ts(), content_ts(), map()}
+      @type quad_ts :: list(quad_t)
+
+      @typep specific_quad_t(a) :: {a, attribute_ts(), content_ts(), map()}
+      @type specific_quad_ts(a) :: list(specific_quad_t(a))
+
+      @type quads_lead_by_t(a) :: [specific_quad_t(a)|quad_ts()]
 
       @type severity_t :: :error | :warning
       @type status_t :: :ok | :error | :warning
 
-      @type result_t :: {status_t(), qaud_ts(), messages_t()}
+      @type result_t :: {status_t(), quad_ts(), messages_t()}
     end
   end
 end

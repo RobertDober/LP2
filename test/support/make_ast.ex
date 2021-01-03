@@ -7,17 +7,17 @@ defmodule Test.Support.MakeAst do
     end
   end
 
-  def p(content, atts \\ []), do: make_tag("p", content, atts)
-  def li(content, atts \\ []), do: make_tag("li", content, atts)
-  def ol(content, atts \\ []), do: make_tag("ol", content, atts)
-  def ul(content, atts \\ []), do: make_tag("ul", content, atts)
+  def p(content, atts \\ []), do: make_tag(:p, content, atts)
+  def li(content, atts \\ []), do: make_tag(:li, content, atts)
+  def ol(content, atts \\ []), do: make_tag(:ol, content, atts)
+  def ul(content, atts \\ []), do: make_tag(:ul, content, atts)
 
   def ok(content) when is_list(content), do: {:ok, content, []}
   def ok(content), do: {:ok, [content], []}
 
 
   def make_tag(tag, content, atts \\ [])
-  def make_tag(tag, content, atts) when is_binary(content) do
+  def make_tag(tag, content, atts) when is_binary(content) or is_tuple(content) do
     _make_tag(tag, atts, [content], %{})
   end
   def make_tag(tag, content, atts) do
