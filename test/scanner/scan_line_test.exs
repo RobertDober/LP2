@@ -1,4 +1,4 @@
-defmodule Test.LP2.ScannerTest do
+defmodule Test.LP2.Scanner.ScanLineTest do
   use ExUnit.Case
   alias LP2.Scanner
 

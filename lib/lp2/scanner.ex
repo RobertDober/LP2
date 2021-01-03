@@ -24,6 +24,7 @@ defmodule LP2.Scanner do
   end
 
   @type t :: Blank.t | Indent.t | OlListItem | UlListItem.t | Text.t
+  @type ts :: list(t())
   @type tokenfn_t :: ([binary()], numbered_line_t() -> t())
 
   @token_definitions [
@@ -33,6 +34,22 @@ defmodule LP2.Scanner do
     { ~r<\A (\s*) (\d{1,9} [.)]) (\s+) (.*) >x, &__MODULE__.ol_item/2},
     { ~r{\A (\s*) (.*) }x, &__MODULE__.text/2},
   ]
+
+  @nlrgx ~r{\n\r?}
+
+  @spec scan_lines(input_t()) :: ts
+  def scan_lines(lines)
+  def scan_lines(lines) when is_binary(lines) do
+    lines
+    |> String.split(@nlrgx)
+    |> scan_lines()
+  end
+  def scan_lines(lines) do
+    lines
+    |> Enum.zip(Stream.iterate(1, &(&1+1)))
+    |> Enum.map(&scan_line/1)
+  end
+
   @spec scan_line(numbered_line_t()) :: t()
   def scan_line(line_lnb_tuple)
   def scan_line({line, lnb}) do

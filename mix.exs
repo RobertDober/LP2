@@ -17,6 +17,13 @@ defmodule Lp2.MixProject do
       start_permanent: Mix.env() == :prod,
       elixirc_paths: elixirc_paths(Mix.env()),
       deps: @deps,
+      preferred_cli_env: [
+        coveralls: :test,
+        "coveralls.detail": :test,
+        "coveralls.post": :test,
+        "coveralls.html": :test
+      ],
+      test_coverage: [tool: ExCoveralls],
     ]
   end
 
@@ -28,7 +35,7 @@ defmodule Lp2.MixProject do
   end
 
 
-  defp elixirc_paths(:test), do: ["lib", "test/support", "dev"]
-  defp elixirc_paths(:dev), do: ["lib", "bench", "dev"]
+  defp elixirc_paths(:test), do: ["lib", "test/support"]
+  # defp elixirc_paths(:dev), do: ["lib", "bench", "dev"]
   defp elixirc_paths(_), do: ["lib"]
 end
