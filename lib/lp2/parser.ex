@@ -2,6 +2,7 @@ defmodule LP2.Parser do
   use LP2.Types
   alias LP2.Scanner
   alias LP2.Parser.Context
+  alias LP2.Parser.ListInfo
 
   import LP2.Parser.AstHelper
 
@@ -34,7 +35,7 @@ defmodule LP2.Parser do
     _parse_para(rest, [raw_quad(:p, line)|result], context)
   end
   defp _parse([%Scanner.UlListItem{}=ul|rest], result, context) do
-    _parse_ul(rest, _push_new_ul(ul, result), context)
+    _parse_ul(rest, _push_new_ul(ul, result), context, struct!(ListInfo, bullet: ul.bullet, list_indent: ul.list_indent))
   end
   defp _parse([], result, %Context{status: status, messages: messages}) do
     {status, Enum.reverse(result), messages}
@@ -51,12 +52,25 @@ defmodule LP2.Parser do
     _parse(rest, _reverse_content_of_head(result), context)
   end
 
-  @spec _parse_ul(Scanner.ts, ul_result_t(), Context.t) :: result_t()
-  defp _parse_ul([%Scanner.UlListItem{content: content}=li|rest], [ul|result], context) do
-    _parse_ul(rest, [_push_to_content({:li, [], [content], %{}}, ul)|result], context)
+  @spec _parse_ul(Scanner.ts, ul_result_t(), Context.t, ListInfo.t) :: result_t()
+  defp _parse_ul([%Scanner.UlListItem{content: content}=li|rest], [ul|result], context, linfo) do
+    _parse_ul(rest, [_push_to_content({:li, [], [content], %{}}, ul)|result], context, linfo)
   end
-  defp _parse_ul(input, result, context) do
-    _parse(input, result, context)
+  defp _parse_ul([%Scanner.Blank{}|rest], result, context, linfo) do
+    _parse_ul(rest, result, context, %{linfo|loose: true})
+  end
+  defp _parse_ul(input, result, context, linfo) do
+    result1 = _reverse_content_of_head(result)
+    _parse(input, _finalize_list(result1, linfo), context)
+  end
+
+  @spec _finalize_list(list_result_t(), ListInfo.t) :: list_result_t()
+  defp _finalize_list(result, li)
+  defp _finalize_list(result, %ListInfo{loose: false}) do
+    result
+  end
+  defp _finalize_list([{ltype, atts, content, meta}|result], %ListInfo{loose: true}) do
+    [{ltype, atts, Enum.map(content, &make_list_item_loose/1), meta}|result]
   end
 
   @spec _reverse_content_of_head(quad_ts()) :: quad_ts()
