@@ -35,5 +35,21 @@ defmodule Test.Parser.ListTest do
       assert parse(input) == expected
     end
   end
+
+  describe "on how lists end" do
+    test "two blank lines do the trick" do
+      input    = [
+        "- a list",
+        "",
+        "",
+        "not so much"
+      ]
+      expected = ok([ul(li("a list")), p("not so much")])
+     
+      assert parse(input) == expected
+    end
+  end
+
+  
   
 end

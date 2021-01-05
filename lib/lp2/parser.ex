@@ -54,10 +54,15 @@ defmodule LP2.Parser do
 
   @spec _parse_ul(Scanner.ts, ul_result_t(), Context.t, ListInfo.t) :: result_t()
   defp _parse_ul([%Scanner.UlListItem{content: content}=li|rest], [ul|result], context, linfo) do
-    _parse_ul(rest, [_push_to_content({:li, [], [content], %{}}, ul)|result], context, linfo)
+    linfo1 = ListInfo.update_loose(linfo)
+    _parse_ul(rest, [_push_to_content({:li, [], [content], %{}}, ul)|result], context, linfo1)
+  end
+  defp _parse_ul([%Scanner.Blank{}|rest], result, context, %ListInfo{on_blank: true} = linfo) do
+    result1 = _reverse_content_of_head(result)
+    _parse(rest, _finalize_list(result1, linfo), context)
   end
   defp _parse_ul([%Scanner.Blank{}|rest], result, context, linfo) do
-    _parse_ul(rest, result, context, %{linfo|loose: true})
+    _parse_ul(rest, result, context, %{linfo|on_blank: true})
   end
   defp _parse_ul(input, result, context, linfo) do
     result1 = _reverse_content_of_head(result)
