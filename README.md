@@ -1,5 +1,9 @@
 # Lp2
 
+
+[![CI](https://github.com/robertdober/lp2/workflows/CI/badge.svg)](https://github.com/robertdober/lp2/actions)
+[![Coverage Status](https://coveralls.io/repos/github/RobertDober/lp2/badge.svg?branch=master)](https://coveralls.io/github/RobertDober/lp2?branch=master)
+
 **TODO: Add description**
 
 ## Installation
